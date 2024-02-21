@@ -2,7 +2,7 @@
 
 import EnvDrawer from "@/components/openDrawer";
 import { FileHandler } from "@/services/file-handler";
-import { CardState, useCardState } from "@/services/main-service";
+import { CardState } from "@/services/main-service";
 import LocalStorageHandler from "@/services/storage-handler";
 import { useEffect, useState } from "react";
 
@@ -35,7 +35,6 @@ export default function Home() {
         const file = event.target.files[0];
         if (file) {
             try {
-                debugger;
                 const importedData = await FileHandler.importFile(file);
                 LocalStorageHandler.save(importedData);
                 console.log("Data imported and saved successfully.");

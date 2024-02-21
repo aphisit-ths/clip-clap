@@ -41,9 +41,4 @@ export class FileHandler {
         }
         return result;
     }
-
-    // Method to save object to local storage
-    static saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
 }
