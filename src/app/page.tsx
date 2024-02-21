@@ -1,27 +1,20 @@
 "use client";
 
-import EnvDrawer from "@/components/openDrawer";
+import EnvDrawer from "@/components/OpenDrawer";
 import { FileHandler } from "@/services/file-handler";
 import { CardState } from "@/services/main-service";
 import LocalStorageHandler from "@/services/storage-handler";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import {Input} from '@/components/ui/input'
+import {Button} from '@/components/ui/button'
+import ClipClapLogo from '@/components/logo'
+import {toast, Toaster} from 'sonner'
+import {ClipboardIcon} from '@radix-ui/react-icons'
 
 export default function Home() {
     const [initState, setInitState] = useState<CardState[]>([]);
-    const [selectedCard, setSelectedCard] = useState<CardState | null>(null);
     const [isUploaded, setIsUploaded] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const toggleSelected = (environment: string) => {
-        const updatedCards = initState.map((card) =>
-            card.environment === environment
-                ? { ...card, selected: true }
-                : { ...card, selected: false }
-        );
-        setInitState(updatedCards);
-        setSelectedCard(
-            initState.find((ele) => ele.environment === environment)
-        );
-    };
     const checkIsUploaded = () => {
         const uploaded = LocalStorageHandler.get();
         setInitState(uploaded);
@@ -31,12 +24,33 @@ export default function Home() {
             setIsUploaded(false);
         }
     };
+    const copyJsonTemplateToClipboard =  async () =>{
+        const emptyJson = [
+            {
+                "username": "",
+                "password": "",
+                "database": "",
+                "server": "",
+                "environment": ""
+            }
+        ]
+        await navigator.clipboard.writeText( JSON.stringify(emptyJson,null,2));
+        toast.success("Clipboard has been created");
+    }
+    const clearState = () =>{
+        setInitState([])
+        setIsUploaded(false)
+        LocalStorageHandler.clear()
+    }
+
     const handleFileInputChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             try {
                 const importedData = await FileHandler.importFile(file);
                 LocalStorageHandler.save(importedData);
+                setInitState(()=> LocalStorageHandler.get());
+                setIsUploaded(true);
                 console.log("Data imported and saved successfully.");
                 setErrorMessage("");
             } catch (error) {
@@ -46,29 +60,38 @@ export default function Home() {
     };
     useEffect(() => {
         checkIsUploaded();
-    }, []);
-
+    }, [isUploaded]);
     return (
         <main className="flex min-h-screen flex-col items-center bg-base-purple p-24">
-            <h1 className="text-5xl font-bold">Choose Environment</h1>
-            {!isUploaded && (
-                <input
-                    type="file"
-                    onChange={handleFileInputChange}
-                    accept=".json,.csv"
-                />
-            )}
+            <Toaster position="bottom-right" richColors />
+            <div className="flex flex-row w-[600px] justify-between items-center mb-[30px]">
+                <ClipClapLogo />
+                {isUploaded ?
+                    <Button variant={"outline"} onClick={()=>clearState()}>Clear</Button>
+                    : <Button variant={"outline"} onClick={()=>copyJsonTemplateToClipboard()}>Copy json template
+                        <ClipboardIcon className="ml-2 h-4 w-4 text-gray-500" /></Button>}
 
-            <div className="flex gap-10 mt-20 ">
+            </div>
+            {!isUploaded && (
+                <Input id="picture" type="file"
+                       size={1}
+                       onChange={handleFileInputChange}
+                       className={"w-1/3"}
+                       accept=".json,.csv" />
+
+            )}
+            <div className="flex gap-10">
                 {isUploaded &&
                     initState.map((ele, idx) => (
-                        <EnvDrawer
-                            environment={ele.environment}
-                            username={ele.username}
-                            password={ele.password}
-                            server={ele.server}
-                            database={ele.database}
-                        />
+                        <div key={ele.environment}>
+                            <EnvDrawer
+                                environment={ele.environment}
+                                username={ele.username}
+                                password={ele.password}
+                                server={ele.server}
+                                database={ele.database}
+                            />
+                        </div>
                     ))}
             </div>
         </main>

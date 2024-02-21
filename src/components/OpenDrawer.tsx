@@ -37,12 +37,12 @@ const EnvDrawer: React.FC<CardState> = ({
         }
     };
     return (
-        <Drawer>
+        <Drawer key={environment}>
             <Toaster position="bottom-right" richColors />
             <DrawerTrigger asChild>
                 <Button
                     variant="outline"
-                    className="text-7xl font-bold tracking-tighter w-auto h-auto px-10 py-10"
+                    className="text-2xl font-bold tracking-tighter w-auto h-auto px-10 py-10"
                 >
                     {environment}
                 </Button>
@@ -94,7 +94,7 @@ const EnvDrawer: React.FC<CardState> = ({
                                 username:
                                 <span className="text-gray-500">
                                     {username}
-                                </span>{" "}
+                                 </span>{" "}
                             </Button>
                             <Button
                                 variant="ghost"
@@ -105,7 +105,7 @@ const EnvDrawer: React.FC<CardState> = ({
                                 password :
                                 <span className="text-gray-500">
                                     {password}
-                                </span>{" "}
+                                 </span>{" "}
                             </Button>{" "}
                             <Button
                                 variant="ghost"
@@ -116,7 +116,7 @@ const EnvDrawer: React.FC<CardState> = ({
                                 database :
                                 <span className="text-gray-500">
                                     {database}
-                                </span>{" "}
+                                 </span>{" "}
                             </Button>{" "}
                             <Button
                                 variant="ghost"
@@ -125,7 +125,7 @@ const EnvDrawer: React.FC<CardState> = ({
                                 onClick={() => copyToClipboard(server)}
                             >
                                 sever :
-                                <span className="text-gray-500">{server}</span>{" "}
+                                <span className="text-gray-500">{server} </span>{" "}
                             </Button>
                         </div>
                     </div>
