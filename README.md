@@ -15,3 +15,10 @@ Technologies used in the project:
 
 -   Next.js(TS)
 -   Local storage
+
+<h2>💻 How to use</h2>
+
+-   Click JSON Template button
+-   Create JSON file at your computer
+-   Paste JSON Template into file
+-   Upload it . Easyyyy ? หรือเปล่านะ
