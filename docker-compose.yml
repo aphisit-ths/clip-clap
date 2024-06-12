@@ -1,0 +1,12 @@
+version: '2'
+services:
+  clip-clappy:
+    build:
+      context: .
+    hostname: default
+    ports:
+      - '3999:3000'
+    entrypoint:
+      - npm
+      - run
+      - start
